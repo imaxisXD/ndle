@@ -1,5 +1,5 @@
-import { Context } from "hono"
-import { MAX_AGE_SECONDS } from "./const"
+import type { Context } from "hono";
+import { MAX_AGE_SECONDS } from "./const";
 
 /**
  * Make a cache key from the context
@@ -7,10 +7,10 @@ import { MAX_AGE_SECONDS } from "./const"
  * @returns The cache key
  */
 function makeCacheKeyFromContext(c: Context): string {
-    const url = new URL(c.req.url)
-    const origin = url.origin.toLowerCase()
-    let pathname = url.pathname.replace(/\/+$/, '') || '/'
-    return `${origin}${pathname}`
+	const url = new URL(c.req.url);
+	const origin = url.origin.toLowerCase();
+	const pathname = url.pathname.replace(/\/+$/, "") || "/";
+	return `${origin}${pathname}`;
 }
 
 /**
@@ -19,8 +19,8 @@ function makeCacheKeyFromContext(c: Context): string {
  * @returns The cache request
  */
 function makeCacheRequestFromContext(c: Context): Request {
-    const cacheKey = makeCacheKeyFromContext(c)
-    return new Request(cacheKey, { method: 'GET' })
+	const cacheKey = makeCacheKeyFromContext(c);
+	return new Request(cacheKey, { method: "GET" });
 }
 
 /**
@@ -29,14 +29,14 @@ function makeCacheRequestFromContext(c: Context): Request {
  * @returns The redirect response
  */
 function buildRedirectResponse(location: URL): Response {
-    return new Response('', {
-        status: 301,
-        headers: new Headers({
-            'Location': location.toString(),
-            'Cache-Control': `public, max-age=${MAX_AGE_SECONDS}`,
-            'Content-Type': 'text/plain; charset=utf-8',
-        })
-    })
+	return new Response("", {
+		status: 301,
+		headers: new Headers({
+			Location: location.toString(),
+			"Cache-Control": `public, max-age=${MAX_AGE_SECONDS}`,
+			"Content-Type": "text/plain; charset=utf-8",
+		}),
+	});
 }
 
 /**
@@ -46,15 +46,20 @@ function buildRedirectResponse(location: URL): Response {
  * @returns The cached response
  */
 async function checkCacheAndReturnElseSave(c: Context, cache: Cache) {
-    const cacheKey = makeCacheKeyFromContext(c)
-    const cacheRequest = new Request(cacheKey, { method: 'GET' })
+	const cacheKey = makeCacheKeyFromContext(c);
+	const cacheRequest = new Request(cacheKey, { method: "GET" });
 
-    // Check for existing cached response first
-    const cachedResponse = await cache.match(cacheRequest)
+	// Check for existing cached response first
+	const cachedResponse = await cache.match(cacheRequest);
 
-    if (cachedResponse) {
-        return cachedResponse
-    }
+	if (cachedResponse) {
+		return cachedResponse;
+	}
 }
 
-export { makeCacheKeyFromContext, makeCacheRequestFromContext, buildRedirectResponse, checkCacheAndReturnElseSave }
+export {
+	makeCacheKeyFromContext,
+	makeCacheRequestFromContext,
+	buildRedirectResponse,
+	checkCacheAndReturnElseSave,
+};

@@ -1,8 +1,19 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "worker",
+  "name": "ndleworker",
   "main": "src/index.ts",
   "compatibility_date": "2025-09-13",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "ndle.im/*",
+      "zone_name": "ndle.im"
+    },
+    {
+      "pattern": "www.ndle.im/*",
+      "zone_name": "ndle.im"
+    }
+  ],
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
@@ -31,12 +42,8 @@
   // "ai": {
   //   "binding": "AI"
   // },
-  "env": {
-    "production": {
-      "observability": {
-        "enabled": true,
-        "head_sampling_rate": 1
-      }
-    }
-  }  
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
 }
